@@ -25,13 +25,13 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         val conv1 = client.startConversation(deviceId)
-//        sendMsg("こんにちは、私は空手が好きです", conv1)
-        sendMsg("こんにちは、私の息子は35歳です", conv1)
+        sendMsg("こんにちは、私は空手が好きです", conv1)
+//        sendMsg("こんにちは、私の息子は35歳です", conv1)
         client.endConversation(conv1)
 
         val conv2 = client.startConversation(deviceId)
-//        sendMsg("こんにちは、私は何が好きでしたっけ？", conv2)
-        sendMsg("こんにちは、私の息子は何歳でしたっけ？", conv2)
+        sendMsg("こんにちは、私は何が好きでしたっけ？", conv2)
+//        sendMsg("こんにちは、私の息子は何歳でしたっけ？", conv2)
         client.endConversation(conv2)
     }
 }

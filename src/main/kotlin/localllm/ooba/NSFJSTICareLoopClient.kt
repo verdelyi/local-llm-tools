@@ -29,6 +29,7 @@ class NSFJSTICareLoopClient(val host: String) {
         family: String,
         aboutYourself: String,
     ): String {
+        println("Sending message: $message")
         val chatRequest = ChatRequest(
             conversationId = conversationId,
             question = message,
@@ -40,7 +41,7 @@ class NSFJSTICareLoopClient(val host: String) {
         )
 
         val requestBodyJson = Json.encodeToString(chatRequest)
-        println("request body: $requestBodyJson")
+//        println("request body: $requestBodyJson")
         val request = Request.Builder()
             .url("$host/chat/generate-response")
             .addHeader("Content-Type", "application/json")
@@ -49,7 +50,7 @@ class NSFJSTICareLoopClient(val host: String) {
 
         val response = httpClient.newCall(request).execute()
         val responseBody = response.body?.string() ?: throw IllegalStateException("Empty response body")
-        println("response body: $responseBody")
+//        println("response body: $responseBody")
         val responseObj = Json.decodeFromString<ChatResponse>(responseBody)
         return responseObj.text
     }

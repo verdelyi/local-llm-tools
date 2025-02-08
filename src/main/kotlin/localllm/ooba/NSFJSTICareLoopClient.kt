@@ -10,6 +10,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
+import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
 
 class NSFJSTICareLoopClient(val host: String) {
     private val TAG = this::class.simpleName
@@ -29,6 +31,7 @@ class NSFJSTICareLoopClient(val host: String) {
         family: String,
         aboutYourself: String,
     ): String {
+
         println("Sending message: $message")
         val chatRequest = ChatRequest(
             conversationId = conversationId,
@@ -48,8 +51,11 @@ class NSFJSTICareLoopClient(val host: String) {
             .post(requestBodyJson.toRequestBody("application/json".toMediaTypeOrNull()))
             .build()
 
-        val response = httpClient.newCall(request).execute()
-        val responseBody = response.body?.string() ?: throw IllegalStateException("Empty response body")
+        val timedResponse = measureTimedValue {
+            httpClient.newCall(request).execute()
+        }
+        println("Response latency: ${timedResponse.duration}")
+        val responseBody = timedResponse.value.body?.string() ?: throw IllegalStateException("Empty response body")
 //        println("response body: $responseBody")
         val responseObj = Json.decodeFromString<ChatResponse>(responseBody)
         return responseObj.text
@@ -70,12 +76,12 @@ class NSFJSTICareLoopClient(val host: String) {
             response.body?.string() ?: throw IllegalStateException("Empty response body")
         //println("Start conversation response: $responseBody")
         val cid = Json.decodeFromString<StartConversationResponse>(responseBody).conversationId
-        println("Started new conversation (cid: $cid)")
+        //println("Started new conversation (cid: $cid)")
         return cid
     }
 
-    fun endConversation(conversationId: String) {
-        val endRequest = EndConversationRequest(conversationId)
+    fun endConversation(deviceId: String, conversationId: String) {
+        val endRequest = EndConversationRequest(deviceId, conversationId)
         val requestBodyJson = Json.encodeToString(endRequest)
         val request = Request.Builder()
             .url("$host/chat/end-conversation")
@@ -88,6 +94,6 @@ class NSFJSTICareLoopClient(val host: String) {
             println("Failed to end conversation: ${response.code}")
             throw IllegalStateException("Failed to end conversation: ${response.code}")
         }
-        println("Successfully ended conversation $conversationId")
+        //println("Successfully ended conversation $conversationId")
     }
 }

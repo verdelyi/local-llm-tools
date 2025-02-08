@@ -4,17 +4,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartConversationRequest(
-    val deviceId: String,
+    val deviceId: String
 )
 
 @Serializable
 data class StartConversationResponse(
-    val conversationId: String,
+    val conversationId: String
 )
 
 @Serializable
 data class EndConversationRequest(
-    val conversationId: String,
+    val deviceId: String,
+    val conversationId: String
 )
 
 @Serializable

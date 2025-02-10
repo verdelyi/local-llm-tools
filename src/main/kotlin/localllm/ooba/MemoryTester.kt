@@ -141,14 +141,14 @@ class MemoryTester(
             }
 
             if (foundKeywords.isNotEmpty()) {
-                println("✓ Found keywords: ${foundKeywords.joinToString(", ")}")
+                println("[OK] Found keywords: ${foundKeywords.joinToString(", ")}")
             } else {
-                println("⚠ No expected keywords found in response")
+                println("[WARNING] No expected keywords found in response")
             }
 
             client.endConversation(deviceId, conv2)
         } catch (e: Exception) {
-            println("❌ Error during test: ${e.message}")
+            println("[ERROR] Error during test: ${e.message}")
         }
         println("-------------------------------------------------------------------------------")
     }
